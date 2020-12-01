@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
+import routerRole from './modules/routers'
+import User from './modules/user'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -23,5 +24,9 @@ export default new Vuex.Store({
     DRAWER_STATE(state) {
       return state.drawer;
     }
+  },
+  modules: {
+    routerRole,
+    User
   }
 });

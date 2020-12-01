@@ -136,6 +136,8 @@ import {mapActions, mapState} from 'vuex'
         sidebarMinWidth: 70
       }
     },
+    created(){
+    },
     computed: {
       ...mapState(['drawer']),
       DRAWER_STATE: {

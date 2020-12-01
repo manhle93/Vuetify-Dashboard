@@ -1,0 +1,347 @@
+:root {
+    --primary-color: #4EA685;
+    --secondary-color: #57B894;
+    --black: #000000;
+    --white: #ffffff;
+    --gray: #efefef;
+    --gray-2: #757575;
+
+    --facebook-color: #4267B2;
+    --google-color: #DB4437;
+    --twitter-color: #1DA1F2;
+    --insta-color: #E1306C;
+    --green: #27AE60
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* html,
+body {
+    height: 100vh;
+    overflow: hidden;
+} */
+
+.logincontainer {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.c_login .row {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+}
+
+.c_login .col {
+    width: 50%;
+}
+
+.c_login .align-items-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.c_login .form-wrapper {
+    width: 100%;
+    max-width: 28rem;
+}
+
+.c_login .form {
+    padding: 1rem;
+    background-color: var(--white);
+    border-radius: 1.5rem;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    transform: scale(0);
+    transition: .5s ease-in-out;
+    transition-delay: 1s;
+}
+
+.c_login .input-group {
+    position: relative;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.c_login .input-group i {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    font-size: 1.4rem;
+    color: var(--gray-2);
+}
+
+.c_login .input-group input {
+    width: 100%;
+    padding: 1rem 3rem;
+    font-size: 1rem;
+    background-color: var(--gray);
+    border-radius: .5rem;
+    border: 0.125rem solid var(--white);
+    outline: none;
+}
+
+.c_login .input-group input:focus {
+    border: 0.125rem solid var(--primary-color);
+}
+
+.c_login .form button {
+    cursor: pointer;
+    width: 100%;
+    padding: .6rem 0;
+    border-radius: .5rem;
+    border: none;
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-size: 1.2rem;
+    outline: none;
+}
+
+.c_login .form p {
+    margin: 1rem 0;
+    font-size: .7rem;
+}
+
+.c_login .flex-col {
+    flex-direction: column;
+}
+
+.c_login .social-list {
+    margin: 2rem 0;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    transform: scale(0);
+    transition: .5s ease-in-out;
+    transition-delay: 1.2s;
+}
+
+.c_login .social-list>div {
+    color: var(--white);
+    margin: 0 .5rem;
+    padding: .7rem;
+    cursor: pointer;
+    border-radius: .5rem;
+    cursor: pointer;
+    transform: scale(0);
+    transition: .5s ease-in-out;
+}
+
+.c_login .social-list>div:nth-child(1) {
+    transition-delay: 1.4s;
+}
+
+.c_login .social-list>div:nth-child(2) {
+    transition-delay: 1.6s;
+}
+
+.c_login .social-list>div:nth-child(3) {
+    transition-delay: 1.8s;
+}
+
+.c_login .social-list>div:nth-child(4) {
+    transition-delay: 2s;
+}
+
+.c_login .social-list>div>i {
+    font-size: 1.5rem;
+    transition: .4s ease-in-out;
+}
+
+.c_login .social-list>div:hover i {
+    transform: scale(1.5);
+}
+
+.c_login .facebook-bg {
+    background-color: var(--facebook-color);
+}
+
+.c_login .google-bg {
+    background-color: var(--google-color);
+}
+
+.c_login .twitter-bg {
+    background-color: var(--twitter-color);
+}
+
+.c_login .insta-bg {
+    background-color: var(--insta-color);
+}
+
+.c_login .pointer {
+    cursor: pointer;
+}
+
+.logincontainer.sign-in .form.sign-in,
+.logincontainer.sign-in .social-list.sign-in,
+.logincontainer.sign-in .social-list.sign-in>div,
+.logincontainer.sign-up .form.sign-up,
+.logincontainer.sign-up .social-list.sign-up,
+.logincontainer.sign-up .social-list.sign-up>div {
+    transform: scale(1);
+}
+
+.c_login .content-row {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 6;
+    width: 100%;
+}
+
+.c_login .text {
+    margin: 4rem;
+    color: var(--white);
+}
+
+.c_login .text h2 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 2rem 0;
+    transition: 1s ease-in-out;
+}
+
+.c_login .text p {
+    font-weight: 600;
+    transition: 1s ease-in-out;
+    transition-delay: .2s;
+}
+
+.c_login .img img {
+    width: 30vw;
+    transition: 1s ease-in-out;
+    transition-delay: .4s;
+}
+
+.c_login .text.sign-in h2,
+.c_login .text.sign-in p,
+.c_login .img.sign-in img {
+    transform: translateX(-250%);
+}
+
+.c_login .text.sign-up h2,
+.c_login .text.sign-up p,
+.c_login .img.sign-up img {
+    transform: translateX(250%);
+}
+
+.logincontainer.sign-in .text.sign-in h2,
+.logincontainer.sign-in .text.sign-in p,
+.logincontainer.sign-in .img.sign-in img,
+.logincontainer.sign-up .text.sign-up h2,
+.logincontainer.sign-up .text.sign-up p,
+.logincontainer.sign-up .img.sign-up img {
+    transform: translateX(0);
+}
+
+/* BACKGROUND */
+
+.logincontainer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 300vw;
+    transform: translate(35%, 0);
+    background-image: linear-gradient(-45deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    transition: 1s ease-in-out;
+    z-index: 6;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-bottom-right-radius: max(50vw, 50vh);
+    border-top-left-radius: max(50vw, 50vh);
+}
+
+.logincontainer.sign-in::before {
+    transform: translate(0, 0);
+    right: 50%;
+}
+
+.logincontainer.sign-up::before {
+    transform: translate(100%, 0);
+    right: 50%;
+}
+
+/* RESPONSIVE */
+
+@media only screen and (max-width: 425px) {
+
+    .logincontainer::before,
+    .logincontainer.sign-in::before,
+    .logincontainer.sign-up::before {
+        height: 100vh;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 0;
+        z-index: 0;
+        transform: none;
+        right: 0;
+    }
+
+    /* .logincontainer.sign-in .col.sign-up {
+        transform: translateY(100%);
+    } */
+
+    .logincontainer.sign-in .col.sign-in,
+    .logincontainer.sign-up .col.sign-up {
+        transform: translateY(0);
+    }
+
+    .c_login .content-row {
+        align-items: flex-start !important;
+    }
+
+    .c_login .content-row .col {
+        transform: translateY(0);
+        background-color: unset;
+    }
+
+    .c_login .col {
+        width: 100%;
+        position: absolute;
+        padding: 2rem;
+        background-color: var(--white);
+        border-top-left-radius: 2rem;
+        border-top-right-radius: 2rem;
+        transform: translateY(100%);
+        transition: 1s ease-in-out;
+    }
+
+    .c_login .row {
+        align-items: flex-end;
+        justify-content: flex-end;
+        margin-right: 0;
+    }
+
+    .c_login .form,
+    .c_login .social-list {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .c_login .text {
+        margin: 0;
+    }
+
+    .c_login .text p {
+        display: none;
+    }
+
+    .c_login .text h2 {
+        margin: .5rem;
+        font-size: 2rem;
+    }
+}

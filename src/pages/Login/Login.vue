@@ -1,187 +1,191 @@
 <template>
-  <v-app>
-    <v-container fluid>
-      <v-row no-gutters>
-        <v-col cols="7" class="main-part d-none d-md-none d-lg-flex">
-          <div class="d-flex">
-            <v-img src="@/assets/logo.svg" contain></v-img>
-            <p>Vue Material Admin</p>
+  <v-app id="container" class="c_login logincontainer">
+    <!-- FORM SECTION -->
+    <div class="row">
+      <!-- SIGN UP -->
+      <div class="col align-items-center flex-col sign-up">
+        <div class="form-wrapper align-items-center">
+          <div class="form sign-up">
+            <div class="input-group">
+              <i class="bx bxs-user"></i>
+              <input type="text" placeholder="Username hoặc Email" />
+            </div>
+            <div class="input-group">
+              <i class="bx bx-mail-send"></i>
+              <input type="email" placeholder="Email" />
+            </div>
+            <div class="input-group">
+              <i class="bx bxs-lock-alt"></i>
+              <input type="password" placeholder="Password" />
+            </div>
+            <div class="input-group">
+              <i class="bx bxs-lock-alt"></i>
+              <input type="password" placeholder="Confirm password" />
+            </div>
+            <button>Đăng ký</button>
+            <p>
+              <span style="margin-right: 5px">Bạn đã có tài khoản ?</span>
+              <b @click="sign" class="pointer">Đăng nhập ngay</b>
+            </p>
           </div>
-        </v-col>
-        <v-col cols="12" lg="5" class="login-part d-flex align-center justify-center">
-          <v-row no-gutters>
-            <v-col cols="12" class="login-part d-flex align-center justify-center flex-column">
-              <div class="login-wrapper">
-                <v-tabs grow>
-                  <v-tabs-slider></v-tabs-slider>
-                  <v-tab :href="`#tab-login`">
-                    LOGIN
-                  </v-tab>
-                  <v-tab :href="`#tab-newUser`">
-                    New User
-                  </v-tab>
+        </div>
+        <div class="form-wrapper">
+          <div class="social-list align-items-center sign-up">
+            <div class="align-items-center facebook-bg">
+              <i class="bx bxl-facebook"></i>
+            </div>
+            <div class="align-items-center google-bg">
+              <i class="bx bxl-google"></i>
+            </div>
+            <div class="align-items-center twitter-bg">
+              <i class="bx bxl-twitter"></i>
+            </div>
+            <div class="align-items-center insta-bg">
+              <i class="bx bxl-instagram-alt"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END SIGN UP -->
+      <!-- SIGN IN -->
+      <div class="col align-items-center flex-col sign-in">
+        <div class="form-wrapper align-items-center">
+          <div class="form sign-in">
+            <div class="input-group">
+              ĐĂNG NHẬP
+              <v-progress-linear v-if="loading" indeterminate color="green"></v-progress-linear>
+            </div>
+            <div class="input-group">
+              <i class="bx bxs-user"></i>
+              <input
+                v-model="formLogin.email_username"
+                type="text"
+                placeholder="Username hoặc Email"
+              />
+            </div>
+            <div class="input-group">
+              <i class="bx bxs-lock-alt"></i>
+              <input v-model="formLogin.password" type="password" placeholder="Password" />
+            </div>
+            <!-- <button @click="login">Đăng nhập</button> -->
+            <v-btn @click="login" color="teal" style="font-size: 14px" :disabled="loading">
+              <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
+              <span v-else>Đăng nhập</span>
+            </v-btn>
+            <p>
+              <b class="pointer">Quên mật khẩu ?</b>
+            </p>
+            <p>
+              <span style="margin-right: 5px">Bạn chưa có tài khoản ?</span>
+              <b @click="sign" class="pointer">Đăng ký ngay</b>
+            </p>
+          </div>
+        </div>
+        <div class="form-wrapper">
+          <div class="social-list align-items-center sign-in">
+            <div class="align-items-center facebook-bg">
+              <i class="bx bxl-facebook"></i>
+            </div>
+            <div class="align-items-center google-bg">
+              <i class="bx bxl-google"></i>
+            </div>
+            <div class="align-items-center twitter-bg">
+              <i class="bx bxl-twitter"></i>
+            </div>
+            <div class="align-items-center insta-bg">
+              <i class="bx bxl-instagram-alt"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END SIGN IN -->
+    </div>
+    <!-- END FORM SECTION -->
 
-                  <v-tab-item :value="'tab-login'" >
-                    <v-form>
-                      <v-container>
-                        <v-row class="flex-column">
-                          <v-col>
-                            <p class="login-slogan display-2 text-center font-weight-medium my-10">Good Morning, User</p>
-                            <v-btn height="45" block color="white" elevation="0" class="google text-capitalize">
-                              <v-img src="@/assets/google.svg" max-width="30" class="mr-4"></v-img>
-                              Sign in with Google</v-btn>
-                          </v-col>
-                          <v-col cols="12" class="d-flex align-center my-8">
-                            <v-divider></v-divider>
-                            <span class="px-5"> or </span>
-                            <v-divider></v-divider>
-                          </v-col>
-                          <v-form>
-                            <v-col>
-                              <v-text-field
-                                  v-model="email"
-                                  :rules="emailRules"
-                                  value="admin@flatlogic.com"
-                                  label="Email Address"
-                                  required
-                              ></v-text-field>
-                              <v-text-field
-                                  v-model="password"
-                                  :rules="passRules"
-                                  type="password"
-                                  label="Password"
-                                  hint="At least 6 characters"
-                                  required
-                              ></v-text-field>
-
-                            </v-col>
-                            <v-col class="d-flex justify-space-between">
-                              <v-btn
-                                  class="text-capitalize"
-                                  large
-                                  :disabled="password.length === 0 || email.length === 0"
-                                  color="primary"
-                                  @click="login"
-                              >
-                                Login</v-btn>
-                              <v-btn large text class="text-capitalize primary--text">Forget Password</v-btn>
-                            </v-col>
-                          </v-form>
-                        </v-row>
-                      </v-container>
-                    </v-form>
-                  </v-tab-item>
-
-                  <v-tab-item :value="'tab-newUser'" >
-                    <v-form>
-                      <v-container>
-                        <v-row class="flex-column">
-
-                          <v-col>
-                            <p class="login-slogan display-2 text-center font-weight-medium mt-10">Welcome!</p>
-                            <p class="login-slogan display-1 text-center font-weight-medium mb-10">Create your account</p>
-                          </v-col>
-
-                          <v-form>
-                            <v-col>
-                              <v-text-field
-                                  v-model="createFullName"
-                                  label="Full Name"
-                                  required
-                              ></v-text-field>
-                              <v-text-field
-                                  v-model="createEmail"
-                                  :rules="emailRules"
-                                  label="Email Address"
-                                  required
-                              ></v-text-field>
-                              <v-text-field
-                                  v-model="createPassword"
-                                  :rules="passRules"
-                                  type="password"
-                                  label="Password"
-                                  hint="At least 6 characters"
-                                  required
-                              ></v-text-field>
-                            </v-col>
-                            <v-col class="d-flex justify-space-between">
-                              <v-btn
-                                  large
-                                  block
-                                  :disabled="createFullName.length === 0 || createEmail.length === 0 || createPassword === 0"
-                                  color="primary"
-                                  @click="login"
-                              >
-                                Create your account</v-btn>
-                            </v-col>
-                          </v-form>
-
-                          <v-col cols="12" class="d-flex align-center my-4">
-                            <v-divider></v-divider>
-                            <span class="px-5"> or </span>
-                            <v-divider></v-divider>
-                          </v-col>
-
-                          <v-btn height="45" block color="white" elevation="0" class="google text-capitalize">
-                            <v-img src="@/assets/google.svg" max-width="30" class="mr-4"></v-img>
-                            Sign in with Google</v-btn>
-                        </v-row>
-                      </v-container>
-                    </v-form>
-                  </v-tab-item>
-
-                </v-tabs>
-              </div>
-            </v-col>
-            <v-col cols="12" class="d-flex justify-center">
-              <v-footer>
-                <div class="primary--text">© 2014-2020 Flatlogic, LLC. All rights reserved.</div>
-              </v-footer>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-container>
+    <!-- CONTENT SECTION -->
+    <div class="row content-row">
+      <!-- SIGN IN CONTENT -->
+      <div class="col align-items-center flex-col">
+        <div class="text sign-in">
+          <h2>Welcome back</h2>
+          <p>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit obcaecati, accusantium
+            molestias, laborum, aspernatur deserunt officia voluptatum tempora dicta quo ab ullam. Assumenda
+            enim harum minima possimus dignissimos deserunt rem.
+          </p>
+        </div>
+        <div class="img sign-in">
+          <img src="./assets/undraw_different_love_a3rg.svg" alt="welcome" />
+        </div>
+      </div>
+      <!-- END SIGN IN CONTENT -->
+      <!-- SIGN UP CONTENT -->
+      <div class="col align-items-center flex-col">
+        <div class="img sign-up">
+          <img src="./assets/undraw_creative_team_r90h.svg" alt="welcome" />
+        </div>
+        <div class="text sign-up">
+          <h2>Join with us</h2>
+          <p>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit obcaecati, accusantium
+            molestias, laborum, aspernatur deserunt officia voluptatum tempora dicta quo ab ullam. Assumenda
+            enim harum minima possimus dignissimos deserunt rem.
+          </p>
+        </div>
+      </div>
+      <!-- END SIGN UP CONTENT -->
+    </div>
+    <!-- END CONTENT SECTION -->
   </v-app>
 </template>
 
 <script>
-
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        email: 'admin@flatlogic.com',
-        emailRules: [
-          v => !!v || 'E-mail is required',
-          v => /.+@.+/.test(v) || 'E-mail must be valid',
-        ],
-        createFullName: 'John Smith',
-        createEmail: 'john@flatlogic.com',
-        createPassword: '123456',
-        password: '123456',
-        passRules: [
-          v => !!v || 'Password is required',
-          v => v.length >= 6 || 'Min 6 characters'
-        ]
-      }
+import store from "../../store/index";
+export default {
+  name: "Login",
+  data() {
+    return {
+      loading: false,
+      formLogin: {
+        email_username: "manh@email.com",
+        password: "12345678",
+      },
+      emailRules: [
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+/.test(v) || "E-mail must be valid",
+      ],
+      createFullName: "John Smith",
+      createEmail: "john@flatlogic.com",
+      createPassword: "123456",
+      passRules: [
+        (v) => !!v || "Password is required",
+        (v) => v.length >= 6 || "Min 6 characters",
+      ],
+    };
+  },
+  methods: {
+    sign() {
+      let container = document.getElementById("container");
+      container.classList.toggle("sign-in");
+      container.classList.toggle("sign-up");
     },
-    methods: {
-      login(){
-        window.localStorage.setItem('authenticated', true);
-        this.$router.push('/dashboard');
-      }
+    async login() {
+      this.loading = true;
+      await store.dispatch("User/login", this.formLogin);
+      this.loading = false;
+      this.$router.push("/dashboard");
     },
-    created() {
-      if (window.localStorage.getItem('authenticated') === 'true') {
-        this.$router.push('/dashboard');
-      }
-    }
-  }
-
-
-
-
+  },
+  created() {
+    setTimeout(() => {
+      let container = document.getElementById("container");
+      container.classList.add("sign-in");
+    }, 200);
+  },
+};
 </script>
+<style lang="css" scoped>
+@import "./style.css";
+@import "https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css";
+</style>
 
-<style src="./Login.scss" lang="scss"/>
