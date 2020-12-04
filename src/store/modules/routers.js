@@ -2,14 +2,14 @@ import {getMenuRole} from "../../api/user";
 
 const state = {
   routes: [], // biến lưu danh sách menu router hiển thị, được truy cập
-  access: false, //bien luu quyen truy cap cuar router
+  access: false, //bien luu quyen truy cap cuar router,
+  routerNames: []
 };
 const mutations = {
   SET_ROUTES: (state, data) => {
     state.routes = data;
   },
   SET_ACCESS: (state, status) => {
-    console.log(status);
     state.access = status;
   },
 };
@@ -23,22 +23,35 @@ const actions = {
     return new Promise((resolve, reject) => {
       getMenuRole()
         .then(response => {
-          console.log("res", response);
-          console.log("all", data);
           let mainRouter = data.find(el => el.children);
-          console.log(mainRouter.children);
-          commit("SET_ROUTES", response);
-          // response.map(el => {
-          //   const pathParent = mainRouter.children.filter(it => it.name == el.name);
-          //   if (pathParent) {
-          //     el.path = pathParent.path;
-          //   } else {
-          //     el.path = null;
-          //   }
-          //   el.children.map(cr => {
-          //    const childPath = mainRouter.children.filter(it => it.name == el.name);
-          //   })
-          // });
+          let menu = [];
+          response.map(el => {
+            const exist = mainRouter.children.find(it => it.name == el.name);
+            if (exist) {
+              if (exist?.children?.length && el?.children?.length) {
+                let children = [];
+                el.children.map(it => {
+                  let exist2 = exist.children.find(ele => ele.name === it.name);
+                  if (exist2) {
+                    children.push({
+                      ...it,
+                      path: mainRouter.path + exist.path + "/" + exist2.path,
+                    });
+                  }
+                });
+                menu.push({
+                  ...el,
+                  path: mainRouter.path + exist.path,
+                  children,
+                });
+              } else
+                menu.push({
+                  ...el,
+                  path: mainRouter.path + exist.path,
+                });
+            }
+          });
+          commit("SET_ROUTES", menu);
           resolve();
         })
         .catch(error => {
@@ -48,9 +61,16 @@ const actions = {
     });
   },
   checkRoleUser({commit}, name) {
-    //Kiem tra quyen truy cap router
+    //Kiem tra quyen truy cap router theo name
     let data = state.routes;
-    let newData = data.map(el => el.name);
+    let parent = data.map(el => el.name);
+    let children = [];
+    data.forEach(el => {
+      if (el.children) {
+        el.children.forEach(it => children.push(it.name));
+      }
+    });
+    let newData = [...parent, ...children]; //Mảng chứa toàn bộ name của rouuter
     if (newData.includes(name) || name == "Error") {
       commit("SET_ACCESS", true);
     } else {

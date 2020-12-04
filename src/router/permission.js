@@ -19,7 +19,7 @@ const getUserInfo = async () => {
     }
     return true;
   } catch (error) {
-    console.log(error);
+    console.log('Chưa đăng nhập hệ thống');
     return false;
   }
 };

@@ -1,58 +1,59 @@
 <template>
-    <!-- :permanent="$vuetify.breakpoint.mdAndUp"  bỏ thuộc tính này trong <v-navigation-drawer sẽ ẩn toàn bộ  sidebar-->
-
   <v-navigation-drawer
     app
+    clipped
     v-model="DRAWER_STATE"
     :mini-variant="!DRAWER_STATE"
     :width="sidebarWidth"
+    :permanent="$vuetify.breakpoint.mdAndUp"
     :temporary="$vuetify.breakpoint.smAndDown"
     :mini-variant-width="sidebarMinWidth"
     :class="{'drawer-mini': !DRAWER_STATE}"
   >
-    <v-list>
-      <template v-for="(item) in menus">
-        <!-- Có menu con-->
-        <v-list-group v-if="item.children.length && DRAWER_STATE" :key="item.name" append-icon>
-          <template v-slot:prependIcon>
-            <v-icon size="22">{{item.icon}}</v-icon>
-          </template>
-          <template v-slot:activator>
+    <v-list dense>
+      <v-subheader>REPORTS</v-subheader>
+      <v-list-item-group v-model="selectedItem" color="primary">
+        <v-list-item v-for="(item, i) in menus" :key="i">
+          <div v-if="item.children.length && DRAWER_STATE">
+            <v-list-group
+              color="primary"
+              v-if="item.children.length && DRAWER_STATE"
+              :key="item.title"
+              append-icon
+              :v-model="id"
+            >
+              <template v-slot:prependIcon>
+                <v-icon size="24">{{item.icon}}</v-icon>
+              </template>
+              <template v-slot:activator>
+                <v-list-item-content>
+                  <v-list-item-title
+                    style="font-size: 14px"
+                    class="grey--text"
+                    active-class="red--text"
+                  >{{ item.name }}</v-list-item-title>
+                </v-list-item-content>
+              </template>
+              <v-list-item v-for="(child, i) in item.children" :key="i" :to="child.path">
+                <v-list-item-action v-if="child.icon">
+                  <v-icon size="small">{{ child.icon }}</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                  <v-list-item-title class="grey--text" style="font-size: 14px">{{ child.name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-group>
+          </div>
+          <div v-else>
+            <v-list-item-icon>
+              <v-icon v-text="item.icon"></v-icon>
+            </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title
-                style="font-size: 13px"
-                class="grey--text"
-                active-class="red--text"
-              >{{ item.name }}</v-list-item-title>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
-          </template>
-
-          <v-list-item
-            v-for="(child, i) in item.children"
-            :key="i"
-            :to="child.path"
-            link
-            style="padding-left: 30px"
-          >
-            <v-list-item-action v-if="child.icon">
-              <v-icon size="18">{{ child.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title class="grey--text" style="font-size: 13px">{{ child.name }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-
-        <!-- Không có menu con-->
-        <v-list-item color="primary" v-else :key="item.name" :to="item.path">
-          <v-list-item-action>
-            <v-icon size="24" :color="item.color ? item.color : ''">{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title style="font-size: 13px" class="grey--text">{{ item.name}}</v-list-item-title>
-          </v-list-item-content>
+          </div>
         </v-list-item>
-      </template>
+      </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -62,16 +63,13 @@ import { mapActions, mapState } from "vuex";
 
 export default {
   props: {
-    source: String,
+    expandOnHover: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
-      mini: false,
-      admins: [
-        ["mdi-grid-large", "mdi-home"],
-        ["mdi-home", "mdi-grid-large"],
-      ],
-
       items: [
         { title: "Dashboard", icon: "mdi-home", link: "/dashboard" },
         { title: "Typography", icon: "mdi-format-size", link: "/typography" },
@@ -107,8 +105,8 @@ export default {
         { title: "Starred", icon: "mdi-circle-medium", color: "primary" },
         { title: "Background", icon: "mdi-circle-medium", color: "error" },
       ],
-      sidebarWidth: 220,
-      sidebarMinWidth: 60,
+      sidebarWidth: 240,
+      sidebarMinWidth: 70,
     };
   },
   created() {
@@ -136,3 +134,7 @@ export default {
 </script>
 
 <style src="./Sidebar.scss" lang="scss"/>
+
+
+
+

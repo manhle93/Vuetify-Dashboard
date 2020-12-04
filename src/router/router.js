@@ -10,7 +10,7 @@ import Charts from "@/pages/Charts/Charts";
 import Maps from "@/pages/Maps/Google";
 import Error from "@/pages/Error/Error";
 import Login from "@/pages/Login/Login";
-
+import Blank from "@/components/Blank/Layout";
 
 export const routes = [
   {
@@ -19,11 +19,19 @@ export const routes = [
     component: Login,
   },
   {
+    path: "*",
+    name: "Error",
+    component: Error,
+  },
+
+  ///////////////////////
+  {
     path: "/",
     redirect: "/dashboard",
     name: "Layout",
     component: Layout,
     children: [
+      //Dashboard Router write here
       {
         path: "dashboard",
         name: "Dashboard",
@@ -47,6 +55,7 @@ export const routes = [
       {
         path: "ui-elements",
         name: "UI Elements",
+        component: Blank, //Component rỗng cho Menu có menu con
         children: [
           {
             path: "icons",
@@ -66,10 +75,5 @@ export const routes = [
         ],
       },
     ],
-  },
-  {
-    path: "*",
-    name: "Error",
-    component: Error,
   },
 ];

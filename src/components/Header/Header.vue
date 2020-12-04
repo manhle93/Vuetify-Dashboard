@@ -82,13 +82,23 @@
     </v-menu>
     <v-menu min-width="180" offset-y bottom left nudge-bottom="10">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn class="mr-0" icon v-bind="attrs" v-on="on">
+        <!-- <v-btn class="mr-0" icon v-bind="attrs" v-on="on">
           <v-icon style="font-size: 28px" :color="config.light.iconColor">mdi-account</v-icon>
-        </v-btn>
+        </v-btn>-->
+        <v-avatar v-bind="attrs" v-on="on" color="orange" size="40">
+          <img v-if="USER && USER.urlImage" :src="USER.urlImage" alt="John" />
+          <span
+            class="white--text headline"
+            v-else-if="USER && USER.name"
+          >{{USER.name.charAt(0).toUpperCase()}}</span>
+          <v-icon v-else dark>mdi-account</v-icon>
+        </v-avatar>
       </template>
       <v-list>
-        <div class="text-h5 grey--text text--darken-3 px-4 pt-4">John Smith</div>
-        <div class="subtitle-2 primary--text font-weight-regular px-4">Flatlogic.com</div>
+        <div class="text-h5 grey--text text--darken-3 px-4 pt-4">{{USER ? USER.name : 'User'}}</div>
+        <div
+          class="subtitle-2 primary--text font-weight-regular px-4"
+        >{{USER ? USER.email : 'Skymap@email.com'}}</div>
         <v-list-item-group color="primary">
           <v-list-item v-for="(item, i) in account" :key="i">
             <v-list-item-icon class="mr-4">
@@ -100,14 +110,9 @@
           </v-list-item>
         </v-list-item-group>
         <div class="d-flex justify-center my-3">
-          <v-btn
-            width="80%"
-            large
-            outlined
-            color="primary"
-            class="text-capitalize"
-            @click="logOut"
-          >Sign Out</v-btn>
+          <v-btn width="80%" large outlined color="primary" @click="logOut">
+            <v-icon left>mdi-logout</v-icon>ĐĂNG XUẤT
+          </v-btn>
         </div>
       </v-list>
     </v-menu>
@@ -189,11 +194,17 @@ export default {
   }),
   computed: {
     ...mapState(["drawer"]),
+    USER() {
+      return this.$store.state.User.me;
+    },
     DRAWER_STATE: {
       get() {
         return this.drawer;
       },
     },
+  },
+  created() {
+    console.log(this.USER);
   },
   methods: {
     ...mapActions(["TOGGLE_DRAWER"]),
@@ -202,7 +213,7 @@ export default {
         await store.dispatch("User/logout");
         location.assign("/login");
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
   },
