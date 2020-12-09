@@ -27,6 +27,6 @@ export default new Vuex.Store({
   },
   modules: {
     routerRole,
-    User
+    User,
   }
 });

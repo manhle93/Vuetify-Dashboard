@@ -7,9 +7,9 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import VueRouter from "vue-router";
 import router from "./router/permission";
+import './app.css'
 Vue.use(Toast);
 Vue.use(VueRouter);
-
 Vue.use(VueGoogleMaps, {
   load: {
     key: "AIzaSyB7OXmzfQYua_1LEhRdqsoYzyJOPh9hGLg",

@@ -38,6 +38,18 @@ export const routes = [
         component: Dashboard,
       },
       {
+        path: "users",
+        name: "Người dùng",
+        component: Blank,
+        children: [
+          {
+            path: "menus",
+            component: () => import("@/pages/User/menus/index"),
+            name: "Menu",
+          },
+        ],
+      },
+      {
         path: "typography",
         name: "Typography",
         component: Typography,
