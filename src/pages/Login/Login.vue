@@ -57,11 +57,7 @@
             </div>
             <div class="input-group">
               <i class="bx bxs-user"></i>
-              <input
-                v-model="formLogin.email_username"
-                type="text"
-                placeholder="Username hoặc Email"
-              />
+              <input v-model="formLogin.email_username" type="text" placeholder="Username hoặc Email" />
             </div>
             <div class="input-group">
               <i class="bx bxs-lock-alt"></i>
@@ -109,9 +105,9 @@
         <div class="text sign-in">
           <h2>Welcome back</h2>
           <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit obcaecati, accusantium
-            molestias, laborum, aspernatur deserunt officia voluptatum tempora dicta quo ab ullam. Assumenda
-            enim harum minima possimus dignissimos deserunt rem.
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit obcaecati, accusantium molestias, laborum,
+            aspernatur deserunt officia voluptatum tempora dicta quo ab ullam. Assumenda enim harum minima possimus
+            dignissimos deserunt rem.
           </p>
         </div>
         <div class="img sign-in">
@@ -127,9 +123,9 @@
         <div class="text sign-up">
           <h2>Join with us</h2>
           <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit obcaecati, accusantium
-            molestias, laborum, aspernatur deserunt officia voluptatum tempora dicta quo ab ullam. Assumenda
-            enim harum minima possimus dignissimos deserunt rem.
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit obcaecati, accusantium molestias, laborum,
+            aspernatur deserunt officia voluptatum tempora dicta quo ab ullam. Assumenda enim harum minima possimus
+            dignissimos deserunt rem.
           </p>
         </div>
       </div>
@@ -147,20 +143,14 @@ export default {
     return {
       loading: false,
       formLogin: {
-        email_username: "manh@email.com",
+        email_username: "manhle@email.com",
         password: "12345678",
       },
-      emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+/.test(v) || "E-mail must be valid",
-      ],
+      emailRules: [v => !!v || "E-mail is required", v => /.+@.+/.test(v) || "E-mail must be valid"],
       createFullName: "John Smith",
       createEmail: "john@flatlogic.com",
       createPassword: "123456",
-      passRules: [
-        (v) => !!v || "Password is required",
-        (v) => v.length >= 6 || "Min 6 characters",
-      ],
+      passRules: [v => !!v || "Password is required", v => v.length >= 6 || "Min 6 characters"],
     };
   },
   methods: {
@@ -170,10 +160,14 @@ export default {
       container.classList.toggle("sign-up");
     },
     async login() {
-      this.loading = true;
-      await store.dispatch("User/login", this.formLogin);
-      this.loading = false;
-      this.$router.push("/dashboard");
+      try {
+        this.loading = true;
+        await store.dispatch("User/login", this.formLogin);
+        this.loading = false;
+        this.$router.push("/dashboard");
+      } catch (error) {
+        this.loading = false;
+      }
     },
   },
   created() {
@@ -188,4 +182,3 @@ export default {
 @import "./style.css";
 @import "https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css";
 </style>
-

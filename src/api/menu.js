@@ -38,3 +38,9 @@ export function deleteMenu(data) {
     data
   });
 }
+export function getRoles() {
+  return request({
+    url: "/roles",
+    method: "get",
+  });
+}

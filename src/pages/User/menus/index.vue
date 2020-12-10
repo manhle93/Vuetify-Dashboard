@@ -106,7 +106,7 @@ export default {
           value: "name",
         },
         {text: "Menu cha", value: "Parent.name"},
-        {text: "Hành động", value: "action", sortable: false},
+        {text: "Hành động", value: "action", sortable: false, align: "center"},
       ],
     };
   },
@@ -134,6 +134,7 @@ export default {
       this.confirmDelete = true;
     },
     editMenu(menu) {
+      console.log(menu)
       this.$refs.menuForm.showFormEdit(menu);
     },
     async xoaMenu() {

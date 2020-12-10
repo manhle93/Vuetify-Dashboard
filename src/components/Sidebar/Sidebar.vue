@@ -165,7 +165,6 @@ export default {
 
   created() {
     this.drawerWidth = this.sidebarWidth;
-    console.log(this.menus);
   },
   computed: {
     ...mapState(["drawer"]),

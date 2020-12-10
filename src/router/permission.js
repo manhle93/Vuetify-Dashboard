@@ -13,13 +13,13 @@ const getUserInfo = async () => {
   try {
     let me = store.state.User.me;
     let menus = store.state.routerRole.routes;
-    if (!me || !menus) {
+    let token = getToken()
+    if (token && (!me || !menus)) {
       await store.dispatch("User/getMe");
       await store.dispatch("routerRole/setMenus", routes);
     }
     return true;
   } catch (error) {
-    console.log('Chưa đăng nhập hệ thống');
     return false;
   }
 };

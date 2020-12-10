@@ -5,7 +5,7 @@
       <br />
       <v-card-text>
         <v-form ref="form">
-          <div class="label-form">Menu cha</div>
+          <div class="label-form">Menu - Router cha</div>
           <v-select
             clearable
             v-model="form.parentId"
@@ -16,20 +16,20 @@
             outlined
             @change="changeIconParentMenu()"
             dense
-            placeholder="Chọn menu cha"
+            placeholder="Chọn Menu - Router cha "
           ></v-select>
-          <div class="label-form">Tên Menu</div>
+          <div class="label-form">Tên Menu - Router</div>
           <v-text-field
             v-model="form.name"
             :rules="nameRules"
-            placeholder="Nhập tên Menu"
+            placeholder="Nhập tên Menu - Router"
             outlined
             dense
             :prepend-inner-icon="form.icon ? form.icon : 'mdi-menu'"
           ></v-text-field>
           <v-row>
             <v-col cols="9">
-              <div class="label-form">Biểu tượng Icon</div>
+              <div class="label-form">Biểu tượng Menu Icon</div>
               <v-text-field
                 v-model="form.icon"
                 placeholder="Mã icon"
@@ -43,6 +43,42 @@
               <v-btn style="width: 100%">
                 <v-icon>{{ form.icon }}</v-icon>
               </v-btn>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="8">
+              <div class="label-form">Quyền truy cập</div>
+              <v-select
+                v-model="form.roles"
+                :items="roles"
+                multiple
+                outlined
+                dense
+                item-text="name"
+                item-value="id"
+                prepend-inner-icon="mdi-wrench"
+              >
+                <template v-slot:prepend-item>
+                  <v-list-item ripple @click="selectAllRoles">
+                    <v-list-item-action>
+                      <v-icon :color="form.roles.length > 0 ? 'indigo darken-4' : ''">
+                        {{ form.roles.length == roles.length ? "mdi-close-box" : "mdi-checkbox-blank-outline" }}
+                      </v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        Chọn tất cả
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-divider class="mt-2"></v-divider>
+                </template>
+              </v-select>
+            </v-col>
+            <v-col cols="4">
+              <div class="label-form">Ẩn/Hiện Menu</div>
+              <v-select v-model="form.hidden" :items="menuType" outlined dense item-text="name" item-value="value">
+              </v-select>
             </v-col>
           </v-row>
         </v-form>
@@ -63,19 +99,28 @@
   </v-dialog>
 </template>
 <script>
-import {getParentMenu, editMenu, addMenu} from "@/api/menu";
+import {getParentMenu, editMenu, addMenu, getRoles} from "@/api/menu";
 export default {
   data: () => ({
     show: false,
     edit: false,
     iconParentMenu: "mdi-menu",
     parentMenus: [],
+    roles: [],
     btnLoading: false,
     form: {
       parentId: null,
       name: null,
       icon: null,
+      hidden: false,
+      roles: []
     },
+    menuType: [
+      {name: "Hiện", value: false},
+      {name: "Ẩn", value: true},
+    ],
+    fruits: ["Apples", "Apricots", "Avocado", "Bananas", "Blueberries"],
+    selectedFruits: [],
     nameRules: [v => !!v || "Tên Menu không thể bỏ trống", v => (v && v.length >= 3) || "Tên Menu tối thiểu 3 ký tự"],
   }),
   computed: {},
@@ -83,18 +128,33 @@ export default {
     showFormAdd() {
       this.show = true;
       this.edit = false;
+      this.form = {
+        parentId: null,
+        name: null,
+        icon: null,
+        hidden: false,
+        roles: []
+      };
       this.getParentMenu();
+      this.getAllRoles()
     },
     async showFormEdit(data) {
       this.edit = true;
       await this.getParentMenu();
+      this.getAllRoles()
       this.show = true;
-      this.form = data;
+      this.form = {...data};
+      this.form.roles = data.roles.map(el => el.roleId)
+      console.log(this.form)
       this.iconParentMenu = data.Parent ? data.Parent.icon : "mdi-menu";
     },
     async getParentMenu() {
       let data = await getParentMenu();
       this.parentMenus = data;
+    },
+    async getAllRoles(){
+      let data = await getRoles()
+      this.roles = data
     },
     changeIconParentMenu() {
       if (this.form.parentId) {
@@ -157,6 +217,15 @@ export default {
           this.show = false;
         }
       }
+    },
+    selectAllRoles() {
+      this.$nextTick(() => {
+        if (this.form.roles.length == this.roles.length) {
+          this.form.roles = [];
+        } else {
+          this.form.roles = this.roles.slice();
+        }
+      });
     },
   },
 };

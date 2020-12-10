@@ -1,68 +1,63 @@
-import axios from 'axios'
+import axios from "axios";
 // import store from '@/store'
-import { getToken } from '@/utils/auth'
+import {getToken, setToken, removeToken} from "@/utils/auth";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+import Vue from "vue";
+Vue.use(Toast);
 
 const service = axios.create({
-    baseURL: process.env.VUE_APP_BASE_API,
-    timeout: 6000 
-})
+  baseURL: process.env.VUE_APP_BASE_API,
+  timeout: 6000,
+});
 
 // Trước request
 service.interceptors.request.use(
-      config => {
-        config.headers['Authorization'] = 'Bearer ' + getToken()
+  config => {
+    config.headers["Authorization"] = "Bearer " + getToken();
+    config.mode = "no-cors";
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
-        // if (store.state.User.token) {
-        //     config.headers['Authorization'] = 'Bearer ' + getToken()
-        // }
-
-        config.mode = 'no-cors'
-        return config
-    },
-    error => {
-        return Promise.reject(error)
-    }
-)
-
-// Sau request response 
+// Sau request response
 service.interceptors.response.use(
-    response => {
-        const res = response.data
-        return res
-    },
-    error => {
-        // if (error.response) {
-        //     for (let field in error.response.data.errors) {
-        //         error.response.data.errors[field].forEach(error => {
-        //             console.log(error)
-        //             // Message({
-        //             //     message: error,
-        //             //     type: 'error',
-        //             //     duration: 2 * 1000
-        //             // })
-        //         })
-        //     }
-        // }
-        // else if (error.response.data.message == "Unauthenticated.") {
-        //     // to re-login
-        //     // MessageBox.confirm('Bạn đã đăng xuất', 'Xác nhận đăng xuất', {
-        //     //     confirmButtonText: 'Đăng nhập lại',
-        //     //     cancelButtonText: 'Hủy bỏ',
-        //     //     type: 'warning'
-        //     // }).then(() => {
-        //     //     store.dispatch('user/resetToken').then(() => {
-        //     //         location.reload()
-        //     //     })
-        //     // })
-        // }
-        // else
-        //     // Message({
-        //     //     message: error.response.data.message,
-        //     //     type: 'error',
-        //     //     duration: 5 * 1000
-        //     // })
-        return Promise.reject(error)
+  response => {
+    const res = response.data;
+    return res;
+  },
+  async error => {
+    if (error.response.data.name == "TokenExpiredError") {
+      let result = await service.post("/refresh");    //Refresh token khi hết hạn
+      setToken(result.token);
+      error.response.headers["Authorization"] = "Bearer " + getToken();
+      return service.request(error.response.config);
     }
-)
 
-export default service
+    else if(error.response.data.name == "JsonWebTokenError"){
+        removeToken()
+        location.assign("/login");
+    }
+
+    else if(error.response.data.message && error.response.data.code != 403) {
+        Vue.$toast.error(error.response.data.message, {
+            position: "top-center",
+            timeout: 3000,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            hideProgressBar: true,
+            closeButton: "button",
+            icon: true,
+          });
+    }
+    else return Promise.reject(error);
+  }
+);
+
+export default service;

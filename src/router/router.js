@@ -47,22 +47,17 @@ export const routes = [
             component: () => import("@/pages/User/menus/index"),
             name: "Menu",
           },
+          {
+            path: "role",
+            component: () => import("@/pages/User/roles/index"),
+            name: "Phân quyền",
+          },
+          {
+            path: "profile",
+            component: () => import("@/pages/User/profile/index"),
+            name: "Thông tin",
+          },
         ],
-      },
-      {
-        path: "typography",
-        name: "Typography",
-        component: Typography,
-      },
-      {
-        path: "tables",
-        name: "Tables",
-        component: Tables,
-      },
-      {
-        path: "notifications",
-        name: "Notifications",
-        component: Notifications,
       },
       {
         path: "ui-elements",
@@ -83,6 +78,21 @@ export const routes = [
             path: "maps",
             name: "Maps",
             component: Maps,
+          },
+          {
+            path: "notifications",
+            name: "Notifications",
+            component: Notifications,
+          },
+          {
+            path: "typography",
+            name: "Typography",
+            component: Typography,
+          },
+          {
+            path: "tables",
+            name: "Tables",
+            component: Tables,
           },
         ],
       },

@@ -204,7 +204,6 @@ export default {
     },
   },
   created() {
-    console.log(this.USER);
   },
   methods: {
     ...mapActions(["TOGGLE_DRAWER"]),
