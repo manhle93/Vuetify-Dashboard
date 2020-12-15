@@ -1,6 +1,8 @@
-# 🤘 Vue Material Admin Dashboard
+# Vue Material Admin Dashboard
 
-[![image](https://github.com/flatlogic/material-vue/blob/master/src/assets/screenshot/mainScreenshot.png)](https://flatlogic.github.io/material-vue/)
+[![image](https://res.cloudinary.com/dsobei3hp/image/upload/v1608020963/GitHub/5_kwurom.png)
+##
+[![image](https://res.cloudinary.com/dsobei3hp/image/upload/v1608021203/GitHub/Untitled_hjbpdj.png)
 
 ## Features
 
