@@ -18,17 +18,23 @@
             dense
             placeholder="Chọn Menu - Router cha "
           ></v-select>
-          <div class="label-form">Tên Menu - Router</div>
-          <v-text-field
-            v-model="form.name"
-            :rules="nameRules"
-            placeholder="Nhập tên Menu - Router"
-            outlined
-            dense
-            :prepend-inner-icon="form.icon ? form.icon : 'mdi-menu'"
-          ></v-text-field>
           <v-row>
-            <v-col cols="9">
+            <v-col cols="8">
+              <div class="label-form">Tên Menu - Router</div>
+              <v-text-field
+                v-model="form.name"
+                :rules="nameRules"
+                placeholder="Nhập tên Menu - Router"
+                outlined
+                dense
+                :prepend-inner-icon="form.icon ? form.icon : 'mdi-menu'"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="4">
+              <div class="label-form">STT Vị trí</div>
+              <v-text-field v-model="form.order" type="number" placeholder="Nhập STT" outlined dense></v-text-field>
+            </v-col>
+            <v-col cols="8">
               <div class="label-form">Biểu tượng Menu Icon</div>
               <v-text-field
                 v-model="form.icon"
@@ -38,14 +44,12 @@
                 prepend-inner-icon="mdi-label"
               ></v-text-field>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <div class="label-form">Hình ảnh Icon</div>
               <v-btn style="width: 100%">
                 <v-icon>{{ form.icon }}</v-icon>
               </v-btn>
             </v-col>
-          </v-row>
-          <v-row>
             <v-col cols="8">
               <div class="label-form">Quyền truy cập</div>
               <v-select
@@ -113,14 +117,13 @@ export default {
       name: null,
       icon: null,
       hidden: false,
-      roles: []
+      roles: [],
+      order: null
     },
     menuType: [
       {name: "Hiện", value: false},
       {name: "Ẩn", value: true},
     ],
-    fruits: ["Apples", "Apricots", "Avocado", "Bananas", "Blueberries"],
-    selectedFruits: [],
     nameRules: [v => !!v || "Tên Menu không thể bỏ trống", v => (v && v.length >= 3) || "Tên Menu tối thiểu 3 ký tự"],
   }),
   computed: {},
@@ -133,28 +136,32 @@ export default {
         name: null,
         icon: null,
         hidden: false,
-        roles: []
+        roles: [],
+        order: null
       };
       this.getParentMenu();
-      this.getAllRoles()
+      this.getAllRoles();
     },
     async showFormEdit(data) {
       this.edit = true;
       await this.getParentMenu();
-      this.getAllRoles()
+      this.getAllRoles();
       this.show = true;
       this.form = {...data};
-      this.form.roles = data.roles.map(el => el.roleId)
-      console.log(this.form)
+      this.form.roles = data.roles.map(el => el.roleId);
       this.iconParentMenu = data.Parent ? data.Parent.icon : "mdi-menu";
+      if(!data.parentId){
+        let index = this.parentMenus.findIndex(el => el.id == data.id)
+        this.parentMenus.splice(index,1 )
+      }
     },
     async getParentMenu() {
       let data = await getParentMenu();
       this.parentMenus = data;
     },
-    async getAllRoles(){
-      let data = await getRoles()
-      this.roles = data
+    async getAllRoles() {
+      let data = await getRoles();
+      this.roles = data;
     },
     changeIconParentMenu() {
       if (this.form.parentId) {

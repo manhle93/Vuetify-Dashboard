@@ -44,3 +44,19 @@ export function getRoles() {
     method: "get",
   });
 }
+
+export function getMenuRole(params) {
+  return request({
+    url: "/rolemenulist",
+    method: "get",
+    params
+  });
+}
+
+export function updateMenuRole(data) {
+  return request({
+    url: "/updaterolemenu",
+    method: "post",
+    data
+  });
+}

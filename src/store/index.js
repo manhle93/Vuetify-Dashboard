@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import routerRole from './modules/routers'
 import User from './modules/user'
+import confirmBox from './modules/confirmBox'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -28,5 +29,6 @@ export default new Vuex.Store({
   modules: {
     routerRole,
     User,
+    confirmBox
   }
 });

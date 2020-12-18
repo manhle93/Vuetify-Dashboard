@@ -111,14 +111,14 @@
           </p>
         </div>
         <div class="img sign-in">
-          <img src="./assets/undraw_different_love_a3rg.svg" alt="welcome" />
+          <img src="./assets/undraw_Data_re_80ws.svg" alt="welcome" />
         </div>
       </div>
       <!-- END SIGN IN CONTENT -->
       <!-- SIGN UP CONTENT -->
       <div class="col align-items-center flex-col">
         <div class="img sign-up">
-          <img src="./assets/undraw_creative_team_r90h.svg" alt="welcome" />
+          <img src="./assets/undraw_Data_re_80ws.svg" alt="welcome" />
         </div>
         <div class="text sign-up">
           <h2>Join with us</h2>

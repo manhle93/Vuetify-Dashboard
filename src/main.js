@@ -8,6 +8,8 @@ import "vue-toastification/dist/index.css";
 import VueRouter from "vue-router";
 import router from "./router/permission";
 import './app.css'
+import confirmBoxPlugin from './plugins/confirmBox';
+Vue.use(confirmBoxPlugin, { store })
 Vue.use(Toast);
 Vue.use(VueRouter);
 Vue.use(VueGoogleMaps, {

@@ -55,8 +55,9 @@ service.interceptors.response.use(
             closeButton: "button",
             icon: true,
           });
+         Promise.reject(error);
     }
-    else return Promise.reject(error);
+   return Promise.reject(error);
   }
 );
 
