@@ -6,9 +6,9 @@
 </template>
 
 <script>
-import ComfirmBox from './components/ConfirmBox/ComfirmBox.vue';
+import ComfirmBox from "./components/ConfirmBox/ComfirmBox.vue";
 export default {
-  components: { ComfirmBox },
+  components: {ComfirmBox},
   name: "App",
 };
 </script>

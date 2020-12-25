@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="show" persistent width="600">
     <v-card>
-      <v-card-title class="headline">THÊM MENU HỆ THỐNG</v-card-title>
+      <v-card-title class="headline">{{edit ? 'CẬP NHẬT MENU HỆ THỐNG': 'THÊM MENU HỆ THỐNG'}}</v-card-title>
       <br />
       <v-card-text>
         <v-form ref="form">

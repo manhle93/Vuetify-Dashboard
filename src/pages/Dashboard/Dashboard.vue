@@ -16,7 +16,9 @@
           <v-card color="#303F9F" dark>
             <div class="d-flex flex-no-wrap justify-space-between">
               <div class="mr-6">
-                <v-card-title class="headline pt-6"><span style="font-size: 40px">Hello {{USER.name}}!</span></v-card-title>
+                <v-card-title class="headline pt-6"
+                  ><span style="font-size: 40px">Hello {{ USER.name }}!</span></v-card-title
+                >
 
                 <v-card-subtitle class="mt-1">Have a nice day at work</v-card-subtitle>
 
@@ -528,7 +530,7 @@
           </v-card>
         </v-col>
         <v-col cols="12">
-          <v-card class="support-requests mx-1 mb-1">
+          <v-card class="support-requests mx-1 mb-1" v-if="showAcctr">
             <v-card-title class="pa-6 pb-0">
               <p>Support Requests</p>
               <v-spacer></v-spacer>
@@ -588,7 +590,33 @@
               </v-simple-table>
             </v-card-text>
           </v-card>
+         
+          <v-card class="mb-1" v-else>
+            <v-card-title class="pa-6 pb-4">
+              <p>Menu</p>
+              <v-spacer></v-spacer>
+              <div style="width: 300px">
+                <v-text-field
+                  append-icon="mdi-magnify"
+                  v-model="search"
+                  label="Tìm kiếm"
+                  clearable
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </div>
+            </v-card-title>
+            <v-data-table
+              :headers="headers"
+              :items="dataAcctress"
+              :items-per-page="10"
+              class="elevation-1"
+              loading-text="Đang tải dữ liệu ..."
+            >
+            </v-data-table>
+          </v-card>
         </v-col>
+        <chart-bar :type="'age'"/>
       </v-row>
     </div>
   </v-container>
@@ -604,22 +632,40 @@ import pic6 from "./image/06.svg";
 import mock from "./mock";
 import Trend from "vuetrend";
 import ApexChart from "vue-apexcharts";
-
+import json from "../../dataAcctress/acctress.json";
+import ChartBar from './Chart'
 export default {
   name: "Dashboard",
   components: {
     Trend,
     ApexChart,
+    ChartBar
   },
   data() {
     return {
+      dataAcctress: json,
+      showAcctr: false,
       pic: [pic1, pic2, pic3, pic4, pic5, pic6],
       picRandom: Math.floor(Math.random() * 6),
       mock,
+      search: '',
       apexLoading: false,
       value: this.getRandomInt(10, 90),
       value2: this.getRandomInt(10, 90),
       mainApexAreaSelect: "Daily",
+      headers: [
+        {text: "Name", value: "name"},
+        {text: "Japan Name", value: "japanName"},
+        {text: "Ngày sinh", value: "birthday"},
+        {text: "V-1", value: "bust"},
+        {text: "V-2", value: "waist"},
+        {text: "V-3", value: "waist"},
+        {text: "Chiều cao", value: "height"},
+        {text: "Nhóm máu", value: "blood_type"},
+        {text: "Thành phố", value: "hobby"},
+        {text: "Quận", value: "prefectures"},
+      ],
+      ages: []
     };
   },
   computed: {
@@ -648,10 +694,16 @@ export default {
       let rand = min - 0.5 + Math.random() * (max - min + 1);
       return Math.round(rand);
     },
+    getData(){
+      let a = []
+     this.dataAcctress.map(el => a.push(Number(el.bust)))
+     this.ages = [{data: [...a]}]
+      console.log(this.ages)
+    }
   },
   mounted() {
+    this.getData()
     setTimeout(() => {
-      console.log(this.USER)
       this.apexLoading = true;
     });
   },

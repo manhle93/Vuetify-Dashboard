@@ -18,14 +18,14 @@
         <p>Menu</p>
         <v-spacer></v-spacer>
         <div style="width: 300px">
-        <v-text-field
-          append-icon="mdi-magnify"
-          v-model="search"
-          label="Tìm kiếm"
-          clearable
-          single-line
-          hide-details
-        ></v-text-field>
+          <v-text-field
+            append-icon="mdi-magnify"
+            v-model="search"
+            label="Tìm kiếm"
+            clearable
+            single-line
+            hide-details
+          ></v-text-field>
         </div>
       </v-card-title>
       <v-data-table
@@ -45,7 +45,33 @@
           <span>{{ item.Parent ? item.Parent.order + "-" + item.order : item.order }}</span>
         </template>
         <template v-slot:[`item.action`]="{item}">
-          <v-tooltip left>
+          <v-menu>
+            <template v-slot:activator="{on, attrs}">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon color="textColor">mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="editMenu(item)">
+                <v-list-item-title>
+                  <v-icon class="mr-2">
+                    mdi-pencil
+                  </v-icon>
+                  Cập nhật</v-list-item-title
+                >
+              </v-list-item>
+              <v-list-item @click="xoaMenu(item)">
+                <v-list-item-title>
+                  <v-icon class="mr-2">
+                    mdi-delete
+                  </v-icon>
+                  Xóa Menu</v-list-item-title
+                >
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
+          <!-- <v-tooltip left>
             <template v-slot:activator="{on, attrs}">
               <v-icon v-bind="attrs" v-on="on" @click="editMenu(item)">
                 mdi-pencil
@@ -60,7 +86,7 @@
               </v-icon>
             </template>
             <span>Xóa Menu</span>
-          </v-tooltip>
+          </v-tooltip> -->
         </template>
       </v-data-table>
     </v-card>
@@ -98,7 +124,7 @@ export default {
         },
         {text: "Menu cha", value: "Parent.name"},
         {text: "Vị trí", value: "order"},
-        {text: "Hành động", value: "action", sortable: false, align: "center"},
+        {text: "Hành động", value: "action", sortable: false, align: "center", width: "150"},
       ],
     };
   },
@@ -107,9 +133,9 @@ export default {
     this.getMenu();
   },
   watch: {
-    search: debounce( async function(val){
+    search: debounce(async function(val) {
       this.loading = true;
-       let data = await getMenuAdmin({
+      let data = await getMenuAdmin({
         page: this.page,
         perPage: this.itemsPerPage,
         search: val,

@@ -3,19 +3,25 @@
     <v-row>
       <v-col cols="4">
         <v-card>
-          <v-img height="230px" src="https://cdn.vuetifyjs.com/images/parallax/material.jpg">
+          <v-img height="230px" :src="masterialPic">
             <v-card-text>
-              <v-layout column style="align-items: center">
-                <v-avatar size="200">
-                  <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-                  <v-btn color="blue" fab x-small style="position: absolute; top: 155px; right: 50px">
-                    <v-icon color="white">mdi-pencil</v-icon>
-                  </v-btn>
-                </v-avatar>
+              <v-layout column class="align-center">
+                <v-tooltip top>
+                  <template v-slot:activator="{on, attrs}">
+                    <v-avatar size="200" style="border: 4px solid white" v-bind="attrs" v-on="on" @click="uploadAvatar">
+                      <img :src="USER.urlImage ? imageEndpoint + USER.urlImage : avatarNone" alt="ManhLe" />
+                      <v-btn color="blue" fab x-small style="position: absolute; top: 155px; right: 50px">
+                        <v-icon color="white">mdi-pencil</v-icon>
+                      </v-btn>
+                    </v-avatar>
+                  </template>
+                  <span>Upload Ảnh đại diện</span>
+                </v-tooltip>
               </v-layout>
+              <input name="avatar" ref="upload-image" style="display: none" type="file" @change="handleUpload($event)" />
             </v-card-text>
           </v-img>
-          <v-layout column style="align-items: center">
+          <v-layout column class="align-center">
             <v-card-title>{{ USER.name }}</v-card-title>
             <v-card-subtitle>{{ USER.email }}</v-card-subtitle>
             <v-btn rounded color="primary" dark small @click="changePass()">
@@ -33,7 +39,9 @@
             <div class="mb-2">
               Tên đăng nhập: <strong>{{ USER.userName }}</strong>
             </div>
-            <div class="mb-2">Quyền quản trị:</div>
+            <div class="mb-2">
+              Quyền quản trị: {{ USER && USER.role ? USER.role.name + " - " + USER.role.description : "" }}
+            </div>
             <span></span>
           </v-layout>
         </v-card>
@@ -132,10 +140,17 @@
 </template>
 <script>
 import Inbox from "./dashboard/inbox";
+import {changePassword} from "@/api/user";
+import avatarNone from "../../../../docs/img/avatar_none.png";
+import masterialPic from "../../../../docs/img/masterial.png";
+
 export default {
   components: {Inbox},
   data: () => ({
+    avatarNone,
+    masterialPic,
     tab: null,
+    imageEndpoint: process.env.VUE_APP_BASE,
     showFormChangePass: false,
     changePassWord: {
       currentPass: null,
@@ -153,7 +168,7 @@ export default {
       return this.$store.state.User.me;
     },
     reNewPassWord() {
-      if(! this.changePassWord.reNewPassWord)return () => 'Hãy nhập lại mật khẩu mới';
+      if (!this.changePassWord.reNewPassWord) return () => "Hãy nhập lại mật khẩu mới";
       return () => this.changePassWord.newPassWord === this.changePassWord.reNewPassWord || "Mật khẩu không trùng khớp";
     },
   },
@@ -168,6 +183,59 @@ export default {
         return "";
       }
     },
+    uploadAvatar() {
+      this.$refs["upload-image"].click();
+    },
+    handleUpload(e) {
+      let files = e.target.files;
+      let data = new FormData();
+      data.append("file", files[0]);
+
+      var filePath = files[0].name.split(".").pop(); //lấy định dạng file
+      var dinhDangChoPhep = ["jpg", "jpeg", "png"]; //các tập tin cho phép
+      const isLt2M = files[0].size / 1024 / 1024 < 20;
+      if (!isLt2M) {
+        this.form.fileList.pop();
+        this.$toast.warning("Kích thước file ảnh tối đa 20Mb!", {
+          position: "top-center",
+          timeout: 2000,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+        });
+        return false;
+      }
+      if (!dinhDangChoPhep.find(el => el == filePath.toLowerCase())) {
+        this.loadingUpload = false;
+        this.listLoading = false;
+        this.iconUpload = "el-icon-bottom";
+        this.$toast.warning("Tập tin không hợp lệ!", {
+          position: "top-center",
+          timeout: 2000,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+        });
+        return;
+      } else {
+        // uploadAvatar(data)
+        //   .then((res) => {
+        //     this.src = process.env.VUE_APP_BASE + res;
+        //   })
+        //   .catch((error) => {});
+      }
+      this.$refs["upload-image"].value = null;
+    },
     changePass() {
       this.showFormChangePass = true;
       this.changePassWord = {
@@ -176,10 +244,35 @@ export default {
         reNewPassWord: null,
       };
     },
-    updatePass() {
+    async updatePass() {
       this.$refs.form.validate();
       if (this.$refs.form.validate()) {
-        console.log(2121);
+        try {
+          this.btnLoading = true;
+          await changePassword(this.changePassWord);
+          this.showFormChangePass = false;
+          this.btnLoading = false;
+          this.changePassWord = {
+            currentPass: null,
+            newPassWord: null,
+            reNewPassWord: null,
+          };
+          this.$toast.info("Đổi mật khẩu thành công!", {
+            position: "top-center",
+            timeout: 2000,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            hideProgressBar: true,
+            closeButton: "button",
+            icon: true,
+          });
+          window.location.reload();
+        } catch (error) {
+          this.btnLoading = false;
+        }
       }
     },
   },

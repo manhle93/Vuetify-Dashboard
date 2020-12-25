@@ -17,7 +17,7 @@
           Hủy bỏ
         </v-btn>
         <v-btn class="ma-2" color="primary" dark small @click="accept()" :loading="btnLoading">
-          Chấp nhận
+          Đồng ý
           <v-icon dark right>
             mdi-checkbox-marked-circle
           </v-icon>
@@ -45,6 +45,7 @@ export default {
         this.title = state.confirmBox.title;
         this.body = state.confirmBox.body;
         this.action = state.confirmBox.action;
+        this.width = state.confirmBox.width;
         this.onDone = state.confirmBox.onDone;
         this.message = state.confirmBox.message;
         this.dialog = true;

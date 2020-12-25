@@ -3,7 +3,8 @@ import {getMenuRole} from "../../api/user";
 const state = {
   routes: [], // biến lưu danh sách menu router hiển thị, được truy cập
   access: false, //bien luu quyen truy cap cuar router,
-  routerNames: []
+  routerNames: [],
+  loading: false
 };
 const mutations = {
   SET_ROUTES: (state, data) => {
@@ -12,6 +13,9 @@ const mutations = {
   SET_ACCESS: (state, status) => {
     state.access = status;
   },
+  setLoading: (state, status) => {
+    state.loading = status
+  }
 };
 
 const actions = {

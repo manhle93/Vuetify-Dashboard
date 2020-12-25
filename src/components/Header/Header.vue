@@ -1,5 +1,13 @@
 <template>
   <v-app-bar class="main-header" height="64" fixed color="teal" dark>
+    <v-progress-linear
+      indeterminate
+      color="yellow darken-2"
+      style="position: fixed; bottom: 0; left: 0; width: 100%"
+      height="4"
+      v-show="loadingBar"
+    ></v-progress-linear>
+
     <v-btn icon class="mx-1" @click.stop="TOGGLE_DRAWER">
       <template v-if="DRAWER_STATE">
         <v-icon style="font-size: 28px">mdi-arrow-left</v-icon>
@@ -13,9 +21,9 @@
     <Search />
 
     <v-menu offset-y bottom nudge-bottom="10" left>
-      <template v-slot:activator="{ on, attrs }">
+      <template v-slot:activator="{on, attrs}">
         <v-btn
-          @click="notificationsBadge ? notificationsBadge = !notificationsBadge : ''"
+          @click="notificationsBadge ? (notificationsBadge = !notificationsBadge) : ''"
           v-bind="attrs"
           v-on="on"
           style="font-size: 28px"
@@ -41,9 +49,9 @@
       </v-list>
     </v-menu>
     <v-menu max-width="280" offset-y bottom nudge-bottom="10" left>
-      <template v-slot:activator="{ on, attrs }">
+      <template v-slot:activator="{on, attrs}">
         <v-btn
-          @click="messageBadge ? messageBadge = !messageBadge : ''"
+          @click="messageBadge ? (messageBadge = !messageBadge) : ''"
           v-bind="attrs"
           v-on="on"
           style="font-size: 28px"
@@ -81,24 +89,23 @@
       </v-list>
     </v-menu>
     <v-menu min-width="180" offset-y bottom left nudge-bottom="10">
-      <template v-slot:activator="{ on, attrs }">
+      <template v-slot:activator="{on, attrs}">
         <!-- <v-btn class="mr-0" icon v-bind="attrs" v-on="on">
           <v-icon style="font-size: 28px" :color="config.light.iconColor">mdi-account</v-icon>
         </v-btn>-->
         <v-avatar v-bind="attrs" v-on="on" color="orange" size="40">
-          <img v-if="USER && USER.urlImage" :src="USER.urlImage" alt="John" />
-          <span
-            class="white--text headline"
-            v-else-if="USER && USER.name"
-          >{{USER.name.charAt(0).toUpperCase()}}</span>
+          <img v-if="USER && USER.urlImage" :src="imageEndpoint + USER.urlImage" alt="John" />
+          <span class="white--text headline" v-else-if="USER && USER.name">{{
+            USER.name.charAt(0).toUpperCase()
+          }}</span>
           <v-icon v-else dark>mdi-account</v-icon>
         </v-avatar>
       </template>
       <v-list>
-        <div class="text-h5 grey--text text--darken-3 px-4 pt-4">{{USER ? USER.name : 'User'}}</div>
-        <div
-          class="subtitle-2 primary--text font-weight-regular px-4"
-        >{{USER ? USER.email : 'Skymap@email.com'}}</div>
+        <div class="text-h5 grey--text text--darken-3 px-4 pt-4">{{ USER ? USER.name : "User" }}</div>
+        <div class="subtitle-2 primary--text font-weight-regular px-4">
+          {{ USER ? USER.email : "Skymap@email.com" }}
+        </div>
         <v-list-item-group color="primary">
           <v-list-item v-for="(item, i) in account" :key="i">
             <v-list-item-icon class="mr-4">
@@ -120,7 +127,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import {mapActions, mapState} from "vuex";
 import config from "../../config";
 import Search from "@/components/Search/Search";
 
@@ -128,9 +135,10 @@ import store from "../../store/index";
 
 export default {
   name: "Header",
-  components: { Search },
+  components: {Search},
   data: () => ({
     config,
+    imageEndpoint: process.env.VUE_APP_BASE,
     searchCollapse: true,
     notifications: [
       {
@@ -185,9 +193,9 @@ export default {
       },
     ],
     account: [
-      { text: "Profile", icon: "mdi-account", color: "textColor" },
-      { text: "Tasks", icon: "mdi-thumb-up", color: "textColor" },
-      { text: "Messages", icon: "mdi-flag", color: "textColor" },
+      {text: "Profile", icon: "mdi-account", color: "textColor"},
+      {text: "Tasks", icon: "mdi-thumb-up", color: "textColor"},
+      {text: "Messages", icon: "mdi-flag", color: "textColor"},
     ],
     notificationsBadge: true,
     messageBadge: true,
@@ -197,14 +205,16 @@ export default {
     USER() {
       return this.$store.state.User.me;
     },
+    loadingBar(){
+      return this.$store.state.routerRole.loading
+    },
     DRAWER_STATE: {
       get() {
         return this.drawer;
       },
     },
   },
-  created() {
-  },
+  created() {},
   methods: {
     ...mapActions(["TOGGLE_DRAWER"]),
     logOut: async () => {

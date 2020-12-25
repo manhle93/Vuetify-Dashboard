@@ -28,3 +28,26 @@ export function getMenuRole() {
     method: "get",
   });
 }
+
+export function changePassword(data) {
+  return request({
+    url: "/changepassword",
+    method: "post",
+    data
+  });
+}
+
+export function listUser(params) {
+  return request({
+    url: "/users",
+    method: "get",
+    params
+  });
+}
+export function activeUser(data) {
+  return request({
+    url: "/activeuser",
+    method: "post",
+    data
+  });
+}
