@@ -590,25 +590,50 @@
               </v-simple-table>
             </v-card-text>
           </v-card>
-         
+
           <v-card class="mb-1" v-else>
             <v-card-title class="pa-6 pb-4">
-              <p>Menu</p>
+              <p>ACCTRESS</p>
               <v-spacer></v-spacer>
-              <div style="width: 300px">
+              <div style="width: 500px" class="mr-4">
+                <v-row>
+                  <v-col cols="5">
+                    <v-select
+                      v-model="filterType"
+                      item-text="name"
+                      item-value="value"
+                      :items="dataType"
+                      placeholder="Tìm kiếm theo"
+                      hide-details
+                    ></v-select
+                  ></v-col>
+                  <v-col cols="7">
+                    <v-text-field
+                      append-icon="mdi-magnify"
+                      v-model="search"
+                      label="Tìm kiếm"
+                      clearable
+                      single-line
+                      hide-details
+                    ></v-text-field
+                  ></v-col>
+                </v-row>
+              </div>
+
+              <!-- <div style="width: 300px">
                 <v-text-field
                   append-icon="mdi-magnify"
                   v-model="search"
-                  label="Tìm kiếm"
+                  label="Tìm kiếm kh"
                   clearable
                   single-line
                   hide-details
                 ></v-text-field>
-              </div>
+              </div> -->
             </v-card-title>
             <v-data-table
               :headers="headers"
-              :items="dataAcctress"
+              :items="filterData"
               :items-per-page="10"
               class="elevation-1"
               loading-text="Đang tải dữ liệu ..."
@@ -616,7 +641,32 @@
             </v-data-table>
           </v-card>
         </v-col>
-        <chart-bar :type="'age'"/>
+        <v-col cols="12">
+          <v-card>
+            <v-list-item three-line>
+              <v-list-item-content>
+                <v-list-item-title class="headline mb-1 mt-2  ">BIỂU ĐỒ THỐNG KÊ</v-list-item-title>
+                <!-- <v-list-item-subtitle
+                  >Lựa chọn loại dữ liệu để hiển thị biểu đồ
+                  
+                </v-list-item-subtitle> -->
+                <v-checkbox v-model="checkbox" label="Thống kê dữ liệu rỗng"></v-checkbox>
+              </v-list-item-content>
+              <div style="width: 400px">
+                <v-select
+                  v-model="field"
+                  :items="fields"
+                  placeholder="Lựa chọn thuộc tính"
+                  item-text="name"
+                  item-value="value"
+                ></v-select>
+              </div>
+            </v-list-item>
+          </v-card>
+        </v-col>
+        <v-col cols="12" v-if="field">
+          <chart-bar :type="field" :nullValue="checkbox" />
+        </v-col>
       </v-row>
     </div>
   </v-container>
@@ -633,22 +683,116 @@ import mock from "./mock";
 import Trend from "vuetrend";
 import ApexChart from "vue-apexcharts";
 import json from "../../dataAcctress/acctress.json";
-import ChartBar from './Chart'
+import ChartBar from "./Chart";
+import {debounce} from "lodash";
+
 export default {
   name: "Dashboard",
   components: {
     Trend,
     ApexChart,
-    ChartBar
+    ChartBar,
+  },
+  watch: {
+    search: debounce(function(val) {
+      if (val) {
+        let isGreaterThan = null;
+        let tmp_1 = val.split(">");
+        let tmp_2 = val.split("<");
+        let n_tmp_1 = parseFloat(tmp_1[1]) || Number.MAX_SAFE_INTEGER;
+        let n_tmp_2 = parseFloat(tmp_2[1]) || -Number.MAX_SAFE_INTEGER;
+        if (tmp_2.length === 2) isGreaterThan = true;
+        else if (tmp_1.length === 2) isGreaterThan = false;
+        console.log(this.filterType, isGreaterThan);
+        switch (this.filterType) {
+          case "birthday":
+            this.filterData = this.dataAcctress.filter(el =>
+              isGreaterThan === null
+                ? el.birthday?.includes(val)
+                : isGreaterThan
+                ? el.birthday < tmp_2[1]
+                : el.birthday > tmp_1[1]
+            );
+            break;
+          case "bust":
+            this.filterData = this.dataAcctress.filter(el =>
+              isGreaterThan === null
+                ? el.bust === val
+                : isGreaterThan
+                ? el.bust < n_tmp_2
+                : el.bust > n_tmp_1
+            );
+            break;
+          case "waist":
+            this.filterData = this.dataAcctress.filter(el =>
+              isGreaterThan === null
+                ? el.waist === val
+                : isGreaterThan
+                ? el.waist < n_tmp_2
+                : el.waist > n_tmp_1
+            );
+            break;
+          case "hip":
+            this.filterData = this.dataAcctress.filter(el =>
+              isGreaterThan === null
+                ? el.hip === val
+                : isGreaterThan
+                ? el.hip < n_tmp_2
+                : el.hip > n_tmp_1
+            );
+            break;
+          case "height":
+            this.filterData = this.dataAcctress.filter(el =>
+              isGreaterThan === null
+                ? el.height === val
+                : isGreaterThan
+                ? el.height < n_tmp_2
+                : el.height > n_tmp_1
+            );
+            break;
+          default:
+            this.filterData = this.dataAcctress.filter(el =>el.keyword.toLocaleLowerCase().includes(val.toLocaleLowerCase()))
+            break;
+        }
+      } else {
+        this.filterData = this.dataAcctress;
+      }
+    }, 500),
   },
   data() {
+    let tData = json.map(el=>({
+      ...el,
+      keyword: `${el.name}${el.japanName}${el.hobby}${el.prefectures}${el.blood_type}`
+    }))
     return {
-      dataAcctress: json,
+      field: null,
+      checkbox: false,
+      filterType: 'general',
+      dataType: [
+        {name: "Chiều cao", value: "height"},
+        {name: "Tuổi", value: "birthday"},
+        {name: "Vòng 1", value: "bust"},
+        {name: "Vòng 2", value: "waist"},
+        {name: "Vòng 3", value: "hip"},
+        {name: "Chung", value: "general"},
+      ],
+      fields: [
+        {name: "Chiều cao", value: "height"},
+        {name: "Tuổi", value: "age"},
+        {name: "Vòng 1", value: "bust"},
+        {name: "Vòng 2", value: "waist"},
+        {name: "Vòng 3", value: "hip"},
+        {name: "Nhóm máu", value: "blood_type"},
+        {name: "Quận, thành phố", value: "prefectures"},
+        {name: "Sở thích", value: "hobby"},
+      ],
+      dataAcctress: tData,
+      filterData: tData,
       showAcctr: false,
       pic: [pic1, pic2, pic3, pic4, pic5, pic6],
       picRandom: Math.floor(Math.random() * 6),
       mock,
-      search: '',
+      search: "",
       apexLoading: false,
       value: this.getRandomInt(10, 90),
       value2: this.getRandomInt(10, 90),
@@ -659,13 +803,13 @@ export default {
         {text: "Ngày sinh", value: "birthday"},
         {text: "V-1", value: "bust"},
         {text: "V-2", value: "waist"},
-        {text: "V-3", value: "waist"},
+        {text: "V-3", value: "hip"},
         {text: "Chiều cao", value: "height"},
         {text: "Nhóm máu", value: "blood_type"},
-        {text: "Thành phố", value: "hobby"},
-        {text: "Quận", value: "prefectures"},
+        {text: "Sở thích", value: "hobby"},
+        {text: "Quận, thành phố", value: "prefectures"},
       ],
-      ages: []
+      ages: [],
     };
   },
   computed: {
@@ -694,15 +838,15 @@ export default {
       let rand = min - 0.5 + Math.random() * (max - min + 1);
       return Math.round(rand);
     },
-    getData(){
-      let a = []
-     this.dataAcctress.map(el => a.push(Number(el.bust)))
-     this.ages = [{data: [...a]}]
-      console.log(this.ages)
-    }
+    getData() {
+      let a = [];
+      this.dataAcctress.map(el => a.push(Number(el.bust)));
+      this.ages = [{data: [...a]}];
+      console.log(this.ages);
+    },
   },
   mounted() {
-    this.getData()
+    this.getData();
     setTimeout(() => {
       this.apexLoading = true;
     });
