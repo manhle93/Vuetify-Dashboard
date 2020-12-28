@@ -3,7 +3,7 @@
     <v-card>
       <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title class="headline mb-1">PHÂN QUYỀN</v-list-item-title>
+          <v-list-item-title class="headline mb-1"><v-icon size="40">mdi-wrench</v-icon> PHÂN QUYỀN</v-list-item-title>
           <v-list-item-subtitle>Thiết lập quyền truy cập và thực hiện chức năng hệ thống</v-list-item-subtitle>
         </v-list-item-content>
         <!-- <v-btn color="teal" @click="createMenu()">

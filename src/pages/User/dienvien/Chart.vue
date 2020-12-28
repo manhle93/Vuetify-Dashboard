@@ -3,7 +3,7 @@
 </template>
 <script>
 import Chart from "chart.js";
-import json from "../../dataAcctress/acctress.json";
+import json from "./acctress.json";
 
 export default {
   props: ["type", "nullValue"],

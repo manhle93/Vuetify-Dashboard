@@ -62,6 +62,11 @@ export const routes = [
             component: () => import("@/pages/User/management/index"),
             name: "Quản lý người dùng",
           },
+          {
+            path: "dienvien",
+            component: () => import("@/pages/User/dienvien/index"),
+            name: "Diễn viên",
+          },
         ],
       },
       {

@@ -3,7 +3,9 @@
     <v-card>
       <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title class="headline mb-1">QUẢN LÝ NGƯỜI DÙNG</v-list-item-title>
+          <v-list-item-title class="headline mb-1"
+            ><v-icon size="40">mdi-account-multiple</v-icon> QUẢN LÝ NGƯỜI DÙNG</v-list-item-title
+          >
           <v-list-item-subtitle>Danh sách người dùng hệ thống</v-list-item-subtitle>
         </v-list-item-content>
         <v-btn color="teal" @click="createMenu()">
@@ -17,15 +19,30 @@
       <v-card-title class="pa-6 pb-4">
         <p>Danh sách người dùng</p>
         <v-spacer></v-spacer>
-        <div style="width: 300px">
-          <v-text-field
-            append-icon="mdi-magnify"
-            v-model="search"
-            label="Tìm kiếm"
-            clearable
-            single-line
-            hide-details
-          ></v-text-field>
+        <div style="width: 500px" class="mr-4">
+          <v-row>
+            <v-col cols="5">
+              <v-select
+                v-model="roleId"
+                item-text="name"
+                item-value="id"
+                :items="roles"
+                placeholder="Quyền"
+                hide-details
+                clearable
+              ></v-select
+            ></v-col>
+            <v-col cols="7">
+              <v-text-field
+                append-icon="mdi-magnify"
+                v-model="search"
+                label="Tìm kiếm"
+                clearable
+                single-line
+                hide-details
+              ></v-text-field
+            ></v-col>
+          </v-row>
         </div>
       </v-card-title>
       <v-data-table
@@ -100,13 +117,15 @@
     <div class="pt-2">
       <v-pagination v-model="page" :length="pageCount" @input="changePage">></v-pagination>
     </div>
-    <create-edit ref="menuForm" @on-done="getDataUsers"></create-edit>
+    <create-edit ref="menuForm" @on-done="getDataUsers" :roles="roles"></create-edit>
   </v-container>
 </template>
 <script>
 import CreateEdit from "./create-edit";
 import {debounce} from "lodash";
 import {listUser, activeUser} from "@/api/user";
+import {getRoles} from "@/api/menu";
+
 export default {
   components: {CreateEdit},
   data() {
@@ -121,7 +140,9 @@ export default {
       menu: {},
       loading: false,
       search: "",
+      roleId: null,
       imageEndpoint: process.env.VUE_APP_BASE,
+      roles: [],
       headers: [
         {text: "STT", width: "100", sortable: false},
         {text: "Người dùng", value: "name", sortable: false},
@@ -146,9 +167,10 @@ export default {
   computed: {},
   created() {
     this.getDataUsers();
+    this.getAllRoles();
   },
   watch: {
-    search: debounce(async function(val) {
+    search: debounce(async function(val){
       this.loading = true;
       let data = await listUser({
         page: this.page,
@@ -195,7 +217,7 @@ export default {
           user.name +
           "</strong>" +
           " có thể đăng nhập và sử dụng hệ thống",
-        action: () => activeUser({userId: user.id,active: true}),
+        action: () => activeUser({userId: user.id, active: true}),
         onDone: this.getDataUsers,
       });
     },
@@ -216,6 +238,10 @@ export default {
         action: () => activeUser({userId: user.id, active: false}),
         onDone: this.getDataUsers,
       });
+    },
+    async getAllRoles() {
+      let data = await getRoles();
+      this.roles = data;
     },
   },
 };

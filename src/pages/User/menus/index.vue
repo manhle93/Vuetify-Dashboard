@@ -3,7 +3,7 @@
     <v-card>
       <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title class="headline mb-1">DANH SÁCH MENU</v-list-item-title>
+          <v-list-item-title class="headline mb-1"><v-icon size="40">mdi-menu</v-icon> DANH SÁCH MENU</v-list-item-title>
           <v-list-item-subtitle>Tạo và cập nhật menu hệ thống. Chức năng dành cho nhà phát triển</v-list-item-subtitle>
         </v-list-item-content>
         <v-btn color="teal" @click="createMenu()">

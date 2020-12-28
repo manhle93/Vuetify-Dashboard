@@ -4,7 +4,7 @@
       <v-card-title class="headline">{{ edit ? "CẬP NHẬT THÔNG TIN NGƯỜI DÙNG" : "THÊM MỚI NGƯỜI DÙNG" }}</v-card-title>
       <br />
       <v-card-text>
-        <v-form ref="form">
+        <v-form ref="form" lazy-validation>
           <v-row>
             <v-col cols="5" class="d-flex flex-column align-center">
               <v-img height="200px" :src="masterialPic">
@@ -131,8 +131,8 @@
 import avatarNone from "../../../../docs/img/avatar_none.png";
 import masterialPic from "../../../../docs/img/masterial.png";
 
-import {getRoles} from "@/api/menu";
 export default {
+  props: ["roles"],
   data: () => ({
     avatarNone,
     masterialPic,
@@ -140,7 +140,6 @@ export default {
     edit: false,
     parentMenus: [],
     imageEndpoint: process.env.VUE_APP_BASE,
-    roles: [],
     btnLoading: false,
     form: {
       roleId: null,
@@ -183,24 +182,20 @@ export default {
         userName: null,
         urlImage: null,
       };
-      this.$refs.form.resetValidation()
-      this.getAllRoles();
+      if (this.$refs.form) {
+        this.$refs.form.resetValidation();
+      }
     },
     async showFormEdit(data) {
       this.edit = true;
-      this.getAllRoles();
       this.show = true;
       this.form = {...data};
     },
-    async getAllRoles() {
-      let data = await getRoles();
-      this.roles = data;
-    },
+
     async addUser() {
       this.$refs.form.validate();
       if (this.$refs.form.validate()) {
         this.btnLoading = true;
-        console.log(this.form)
         try {
           this.show = false;
           this.btnLoading = false;
@@ -223,7 +218,7 @@ export default {
         }
       }
     },
-        uploadAvatar() {
+    uploadAvatar() {
       this.$refs["upload-image"].click();
     },
     handleUpload(e) {
