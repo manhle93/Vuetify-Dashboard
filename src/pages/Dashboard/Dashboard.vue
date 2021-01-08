@@ -662,15 +662,8 @@ export default {
       let rand = min - 0.5 + Math.random() * (max - min + 1);
       return Math.round(rand);
     },
-    getData() {
-      let a = [];
-      this.dataAcctress.map(el => a.push(Number(el.bust)));
-      this.ages = [{data: [...a]}];
-      console.log(this.ages);
-    },
   },
   mounted() {
-    this.getData();
     setTimeout(() => {
       this.apexLoading = true;
     });

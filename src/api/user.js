@@ -51,3 +51,28 @@ export function activeUser(data) {
     data
   });
 }
+
+export function updateUser(data) {
+  return request({
+    url: "/updateuser",
+    method: "post",
+    data
+  });
+}
+
+export function createUser(data) {
+  return request({
+    url: "/createuser",
+    method: "post",
+    data
+  });
+}
+
+export function uploadAvatar(data) {
+  return request({
+    url: "/uploadavatar",
+    method: "post",
+    headers: { "Content-Type": "multipart/form-data" },
+    data
+  });
+}

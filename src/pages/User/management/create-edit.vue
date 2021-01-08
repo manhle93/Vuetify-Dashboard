@@ -6,7 +6,7 @@
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <v-row>
-            <v-col cols="5" class="d-flex flex-column align-center">
+            <v-col xs="12" sm="5" md="5" class="d-flex flex-column align-center">
               <v-img height="200px" :src="masterialPic">
                 <v-card-text>
                   <v-layout column class="align-center">
@@ -22,7 +22,13 @@
                       <span>Upload Ảnh đại diện</span>
                     </v-tooltip>
                   </v-layout>
-                  <input ref="upload-image" style="display: none" type="file" @change="handleUpload($event)" />
+                  <input
+                    ref="upload-image"
+                    name="avatar"
+                    style="display: none"
+                    type="file"
+                    @change="handleUpload($event)"
+                  />
                 </v-card-text>
               </v-img>
               <v-layout column class="align-center">
@@ -40,7 +46,7 @@
                 ></v-text-field>
               </v-layout>
             </v-col>
-            <v-col cols="7">
+            <v-col xs="12" sm="7" md="7">
               <div class="label-form">Tên người dùng</div>
               <v-text-field
                 placeholder="Nhập tên người dùng"
@@ -130,7 +136,7 @@
 <script>
 import avatarNone from "../../../../docs/img/avatar_none.png";
 import masterialPic from "../../../../docs/img/masterial.png";
-
+import {updateUser, createUser, uploadAvatar} from "@/api/user";
 export default {
   props: ["roles"],
   data: () => ({
@@ -141,6 +147,7 @@ export default {
     parentMenus: [],
     imageEndpoint: process.env.VUE_APP_BASE,
     btnLoading: false,
+    src: null,
     form: {
       roleId: null,
       email: "",
@@ -197,6 +204,7 @@ export default {
       if (this.$refs.form.validate()) {
         this.btnLoading = true;
         try {
+          await createUser(this.form);
           this.show = false;
           this.btnLoading = false;
           this.$emit("on-done");
@@ -224,7 +232,7 @@ export default {
     handleUpload(e) {
       let files = e.target.files;
       let data = new FormData();
-      data.append("file", files[0]);
+      data.append("avatar", files[0]);
 
       var filePath = files[0].name.split(".").pop(); //lấy định dạng file
       var dinhDangChoPhep = ["jpg", "jpeg", "png"]; //các tập tin cho phép
@@ -262,13 +270,16 @@ export default {
           icon: true,
         });
         return;
-      } else {
-        // uploadAvatar(data)
-        //   .then((res) => {
-        //     this.src = process.env.VUE_APP_BASE + res;
-        //   })
-        //   .catch((error) => {});
       }
+      uploadAvatar(data)
+        .then(res => {
+          console.log("res", res);
+          this.form.urlImage = res.path.substring(7);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
       this.$refs["upload-image"].value = null;
     },
     async updateUser() {
@@ -276,6 +287,7 @@ export default {
       if (this.$refs.form.validate()) {
         this.btnLoading = true;
         try {
+          await updateUser(this.form);
           this.show = false;
           this.btnLoading = false;
           this.$emit("on-done");

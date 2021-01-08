@@ -9,10 +9,11 @@
           <v-list-item-subtitle>Danh sách người dùng hệ thống</v-list-item-subtitle>
         </v-list-item-content>
         <v-btn color="teal" @click="createMenu()">
-          <v-icon left color="white">mdi-plus</v-icon>
-          <span style="color: white">Thêm Người dùng</span>
+          <v-icon color="white">mdi-plus</v-icon>
+          <span style="color: white" class="btn-add">Thêm Người dùng</span>
         </v-btn>
       </v-list-item>
+      
     </v-card>
     <br />
     <v-card class="mb-1">
@@ -246,3 +247,11 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+@media only screen and (max-width: 600px){
+  .btn-add{
+      display: none;
+  }
+}
+</style>

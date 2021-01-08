@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="4">
+      <v-col sm="12" lg="4" md="4" xs="12">
         <v-card>
           <v-img height="230px" :src="masterialPic">
             <v-card-text>
@@ -18,7 +18,13 @@
                   <span>Upload Ảnh đại diện</span>
                 </v-tooltip>
               </v-layout>
-              <input name="avatar" ref="upload-image" style="display: none" type="file" @change="handleUpload($event)" />
+              <input
+                name="avatar"
+                ref="upload-image"
+                style="display: none"
+                type="file"
+                @change="handleUpload($event)"
+              />
             </v-card-text>
           </v-img>
           <v-layout column class="align-center">
@@ -46,7 +52,7 @@
           </v-layout>
         </v-card>
       </v-col>
-      <v-col cols="8">
+      <v-col lg="8" sm="12" md="8" xs="12">
         <v-card>
           <v-toolbar color="primary" dark flat>
             <v-app-bar-nav-icon></v-app-bar-nav-icon>

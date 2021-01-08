@@ -51,14 +51,16 @@
             class="elevation-1"
             loading-text="Đang tải dữ liệu ..."
           >
-          </v-data-table> 
+          </v-data-table>
         </v-card>
       </v-col>
       <v-col cols="12">
         <v-card>
           <v-list-item three-line>
             <v-list-item-content>
-              <v-list-item-title class="headline mb-1 mt-2  "><v-icon size="30">mdi-chart-bar</v-icon> BIỂU ĐỒ THỐNG KÊ</v-list-item-title>
+              <v-list-item-title class="headline mb-1 mt-2  "
+                ><v-icon size="30">mdi-chart-bar</v-icon> BIỂU ĐỒ THỐNG KÊ</v-list-item-title
+              >
               <v-checkbox v-model="checkbox" label="Thống kê dữ liệu rỗng"></v-checkbox>
             </v-list-item-content>
             <div style="width: 400px">
@@ -147,11 +149,11 @@ export default {
         switch (this.filterType) {
           case "birthday":
             this.filterData = this.dataAcctress.filter(el =>
-              isGreaterThan === null
+              el.birthday && (isGreaterThan === null
                 ? el.birthday?.includes(val)
                 : isGreaterThan
                 ? el.birthday < tmp_2[1]
-                : el.birthday > tmp_1[1]
+                : el.birthday > tmp_1[1])
             );
             break;
           case "general":
@@ -160,12 +162,14 @@ export default {
             );
             break;
           default:
-            this.filterData = this.dataAcctress.filter(el =>
-              isGreaterThan === null
-                ? el[this.filterType] === val
-                : isGreaterThan
-                ? el[this.filterType] < n_tmp_2
-                : el[this.filterType] > n_tmp_1
+            this.filterData = this.dataAcctress.filter(
+              el =>
+                el[this.filterType] &&
+                (isGreaterThan === null
+                  ? el[this.filterType] === val
+                  : isGreaterThan
+                  ? el[this.filterType] < n_tmp_2
+                  : el[this.filterType] > n_tmp_1)
             );
             break;
         }
